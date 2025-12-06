@@ -3,6 +3,12 @@ const db = require('../database');
 
 async function seedUsers() {
   try {
+    // Initialize database first
+    db.init();
+    
+    // Wait a bit for table creation
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     // Check if users already exist
     const existingUsers = await db.all('SELECT * FROM users');
     if (existingUsers && existingUsers.length > 0) {
@@ -34,6 +40,9 @@ async function seedUsers() {
     console.log('Password: password456');
   } catch (error) {
     console.error('Error seeding users:', error.message);
+  } finally {
+    // Close database connection
+    db.close();
   }
 }
 
